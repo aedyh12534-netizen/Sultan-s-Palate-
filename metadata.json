@@ -1,0 +1,6 @@
+{
+  "name": "Sultan’s Palate | قصر السلطان - Luxury Fine Dining",
+  "description": "An ultra-luxury Ottoman and contemporary steakhouse fine dining experience in deep black and royal metallic gold with dual Arabic and English interface.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
