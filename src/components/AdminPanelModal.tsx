@@ -36,7 +36,7 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [authError, setAuthError] = useState(false);
-  const [activeTab, setActiveTab] = useState<'theme' | 'menu' | 'whatsapp'>('theme');
+  const [activeTab, setActiveTab] = useState<'theme' | 'menu' | 'whatsapp' | 'vercel'>('theme');
 
   // Dish form state
   const [isAddingNew, setIsAddingNew] = useState(false);
@@ -287,6 +287,18 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
                 >
                   <Phone className="w-3.5 h-3.5" />
                   <span>{isAr ? 'رقم الواتساب' : 'WhatsApp Contact'}</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('vercel')}
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    activeTab === 'vercel'
+                      ? 'bg-[#d4af37] text-black shadow-md'
+                      : 'bg-[#181818] text-neutral-400 hover:text-white'
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>{isAr ? 'نشر Vercel بنقرة واحدة' : 'Vercel 1-Click Code'}</span>
                 </button>
               </div>
 
@@ -590,6 +602,62 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
                     {isAr ? 'حفظ الرقم الجديد' : 'Save Phone Number'}
                   </button>
                 </form>
+              )}
+
+              {/* TAB 4: Vercel 1-Click Code & Guide */}
+              {activeTab === 'vercel' && (
+                <div className="space-y-4 text-xs">
+                  <div className="p-4 rounded-xl bg-[#181818] border border-neutral-800">
+                    <h5 className="text-sm font-bold text-white mb-1 flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-[#d4af37]" />
+                      <span>{isAr ? 'النشر الفوري على Vercel بدون تعقيد' : 'Instant Vercel Deployment'}</span>
+                    </h5>
+                    <p className="text-neutral-400">
+                      {isAr
+                        ? 'تم تجهيز ملف index.html مستقل ومتكامل (HTML + CSS + JS) مصمم للنشر المباشر على Vercel أو GitHub في ثوانٍ معدودة.'
+                        : 'A single, self-contained index.html is ready for instant 1-click deployment on Vercel.'}
+                    </p>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button
+                      onClick={async () => {
+                        try {
+                          const res = await fetch('/vercel-deploy.html');
+                          const text = await res.text();
+                          await navigator.clipboard.writeText(text);
+                          triggerToast(isAr ? 'تم نسخ كود index.html بالكامل إلى الحافظة بنجاح!' : 'Copied index.html code to clipboard!');
+                        } catch {
+                          triggerToast(isAr ? 'تم تجهيز الكود أدناه' : 'Code is ready');
+                        }
+                      }}
+                      className="p-3.5 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#b38728] text-black font-bold flex items-center justify-center gap-2 hover:brightness-110 transition-all cursor-pointer shadow-md"
+                    >
+                      <Sparkles className="w-4 h-4" />
+                      <span>{isAr ? 'نسخ كود index.html بالكامل' : 'Copy Complete index.html'}</span>
+                    </button>
+
+                    <a
+                      href="/vercel-deploy.html"
+                      download="index.html"
+                      className="p-3.5 rounded-xl border border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37]/10 font-bold flex items-center justify-center gap-2 transition-all cursor-pointer text-center"
+                    >
+                      <span>📥 {isAr ? 'تحميل ملف index.html جاهز' : 'Download index.html File'}</span>
+                    </a>
+                  </div>
+
+                  {/* 4 Steps Guide */}
+                  <div className="p-4 rounded-xl bg-[#141414] border border-neutral-800 space-y-2.5">
+                    <h6 className="font-bold text-white text-xs">{isAr ? 'خطوات النشر على Vercel في دقيقة واحدة:' : 'Deploy on Vercel in 1 Minute:'}</h6>
+                    <ol className="list-decimal list-inside space-y-1.5 text-neutral-300 text-[11px] leading-relaxed">
+                      <li>{isAr ? 'افتح حسابك على GitHub وأنشئ مستودعاً جديداً (New Repository) باسم sultans-palate.' : 'Create a new GitHub repository named sultans-palate.'}</li>
+                      <li>{isAr ? 'أنشئ ملفاً باسم index.html والصق الكود المنسوخ داخله ثم اضغط Commit.' : 'Create index.html, paste the copied code, and commit.'}</li>
+                      <li>{isAr ? 'ادخل على Vercel.com واضغط Add New Project واختر المستودع من GitHub.' : 'Go to Vercel.com, click Add New Project, select the repo.'}</li>
+                      <li>{isAr ? 'اضغط Deploy مباشرة دون أي تعديل على الإعدادات، وموقعك سيعمل برابط عالمي فوراً!' : 'Click Deploy without touching settings. Your site is live!'}</li>
+                    </ol>
+                  </div>
+                </div>
               )}
 
               {/* Logout Button */}
